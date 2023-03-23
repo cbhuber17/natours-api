@@ -1,0 +1,23 @@
+{
+  "name": "natours-api",
+  "version": "1.0.0",
+  "description": "Capstone project of Jonas Schmendtmanns Node JS course",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cbhuber17/natours-api.git"
+  },
+  "author": "Colin Huber",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cbhuber17/natours-api/issues"
+  },
+  "homepage": "https://github.com/cbhuber17/natours-api#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {}
+}
