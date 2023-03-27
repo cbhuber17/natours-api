@@ -7,13 +7,13 @@ const router = express.Router();
 
 // Middleware function to capture ID
 // Only applicable to tour routes that have ID
-router.param('id', tourController.checkID);
+// router.param('id', tourController.checkID);
 
 // Root of router URL
 router
   .route('/')
   .get(tourController.getAllTours)
-  .post(tourController.checkBody, tourController.createTour); // Middleware check body first, create tour next
+  .post(tourController.createTour); // Middleware check body first, create tour next
 
 router
   .route('/:id')
