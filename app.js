@@ -6,9 +6,11 @@ const userRouter = require('./routes/userRoutes');
 const app = express();
 
 // Middlewares
-app.use(morgan('dev'));
+app.use(morgan('dev')); // Shows GET, POST, status codes etc. on server console
 
 app.use(express.json()); // Middleware, allows post routes
+
+app.use(express.static(`${__dirname}/public`)); // Serve static content (HTML files)
 
 // Create our own middleware
 // "next" as 3rd arg by convention
