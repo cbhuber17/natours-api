@@ -5,6 +5,10 @@ const tourController = require('./../controllers/tourController');
 
 const router = express.Router();
 
+// Middleware function to capture ID
+// Only applicable to tour routes
+router.param('id', tourController.checkID);
+
 // Root of router URL
 router
   .route('/')

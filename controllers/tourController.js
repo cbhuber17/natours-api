@@ -8,6 +8,21 @@ const tours = JSON.parse(
 );
 
 // ------------------------------------------------------------------
+
+// Middleware function
+exports.checkID = (req, res, next, val) => {
+  console.log(`ID is: ${val}`);
+  // *1 to convert to num
+  if (req.params.id * 1 > tours.length) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+  next();
+};
+
+// ------------------------------------------------------------------
 // Handlers
 
 exports.getAllTours = (req, res) => {
@@ -25,15 +40,9 @@ exports.getAllTours = (req, res) => {
 // ------------------------------------------------------------------
 
 exports.getTour = (req, res) => {
+  // ID checking done in middleware
   const id = req.params.id * 1; // Convert to number
   const tour = tours.find((el) => el.id === id);
-
-  if (!tour) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  }
 
   res.status(200).json({
     status: 'success',
@@ -68,14 +77,7 @@ exports.createTour = (req, res) => {
 // ------------------------------------------------------------------
 
 exports.updateTour = (req, res) => {
-  // *1 to convert to num
-  if (req.params.id * 1 > tours.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  }
-
+  // ID checking done in middleware
   res.status(200).json({
     status: 'success',
     data: {
@@ -87,14 +89,7 @@ exports.updateTour = (req, res) => {
 // ------------------------------------------------------------------
 
 exports.deleteTour = (req, res) => {
-  // *1 to convert to num
-  if (req.params.id * 1 > tours.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  }
-
+  // ID checking done in middleware
   // 204 don't send any data back
   res.status(204).json({
     status: 'success',
