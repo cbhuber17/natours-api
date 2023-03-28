@@ -5,9 +5,11 @@ const tourController = require('./../controllers/tourController');
 
 const router = express.Router();
 
-// Middleware function to capture ID
-// Only applicable to tour routes that have ID
-// router.param('id', tourController.checkID);
+// Alias route of popular queries
+// Alias via aliasTopTours as middleware
+router
+  .route('/top-5-cheap')
+  .get(tourController.aliasTopTours, tourController.getAllTours);
 
 // Root of router URL
 router
