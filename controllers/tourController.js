@@ -5,8 +5,26 @@ const Tour = require('./../Models/tourModel');
 
 exports.getAllTours = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    // Build the query
+    // Grab all the query fields from the URL
+    const queryObj = { ...req.query };
 
+    // However not all fields are used to filter, remove those ones
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
+    excludedFields.forEach((el) => delete queryObj[el]);
+
+    // Advanced filtering for >=, <, inequality methods
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`); // Regex a bunch of OR operators, /b match exactly, g multiple times
+
+    // Get the tours that match the query object
+    // Don't await here, need to chain other future methods like sorting, etc.
+    const query = Tour.find(JSON.parse(queryStr));
+
+    // Execute query
+    const tours = await query;
+
+    // Send response
     res.status(200).json({
       status: 'success',
       results: tours.length,
