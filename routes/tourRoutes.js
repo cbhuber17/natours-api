@@ -11,6 +11,9 @@ router
   .route('/top-5-cheap')
   .get(tourController.aliasTopTours, tourController.getAllTours);
 
+// Aggregation pipeline in MONGO route
+router.route('/tour-stats').get(tourController.getTourStats);
+
 // Root of router URL
 router
   .route('/')

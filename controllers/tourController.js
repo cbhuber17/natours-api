@@ -119,3 +119,44 @@ exports.deleteTour = async (req, res) => {
     });
   }
 };
+
+// ------------------------------------------------------------------
+
+exports.getTourStats = async (req, res) => {
+  try {
+    const stats = await Tour.aggregate([
+      {
+        $match: { ratingsAverage: { $gte: 4.5 } }, // $gte greater-than-equal, MONGO operation on the data
+      },
+      {
+        $group: {
+          _id: '$difficulty', // null will Select all
+          numTours: { $sum: 1 }, // 1 will be added for each mongo document ("tour") returned
+          numRatings: { $sum: '$ratingsQuantity' }, //$sum: MONGO operatior, aggregation pipeline
+          avgRating: { $avg: '$ratingsAverage' }, // $avg, MONGO operator, aggregation pipeline
+          avgPrice: { $avg: '$price' },
+          minPrice: { $min: '$price' },
+          maxPrice: { $max: '$price' },
+        },
+      },
+      {
+        $sort: { avgPrice: 1 }, // 1 for ascending
+      },
+      // {
+      //   $match: { _id: { $ne: 'easy' } },  // Do another match, where ID is difficulty per the group above
+      // },
+    ]);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        stats,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
+    });
+  }
+};
