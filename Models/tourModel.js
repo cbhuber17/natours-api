@@ -57,6 +57,10 @@ const tourSchema = new mongoose.Schema(
       select: false, // Never show when retrieving data
     },
     startDates: [Date],
+    secretTour: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     // Schema options
@@ -70,11 +74,12 @@ const tourSchema = new mongoose.Schema(
 // Called when there is a POST API request
 tourSchema.pre('save', function (next) {
   // In the model schema, put the slug (safe URL string) as the name
+  // this is a document object
   this.slug = slugify(this.name, { lower: true });
   next();
 });
 
-// Post middleware hook
+// Post document middleware hook
 // tourSchema.post('save', function(doc, next) {
 //   next();
 // })
@@ -83,6 +88,29 @@ tourSchema.pre('save', function (next) {
 // Cannot use in query
 tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
+});
+
+// Query middleware
+// Regex to apply to methods that start with "find"
+tourSchema.pre(/^find/, function (next) {
+  // this is a query object
+  // Filter out secret tours
+  this.find({ secretTour: { $ne: true } });
+  next();
+});
+
+// Post query middleware hook
+// tourSchema.post(/^find/, function (docs, next) {
+//   next();
+// });
+
+// Aggregation middleware
+tourSchema.pre('aggregate', function (next) {
+  // this points to the current aggregation object
+  // Filter out secret tours as part of the aggregation computations
+  // Pipeline is an array, unshift adds to beginning of array
+  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+  next();
 });
 
 const Tour = mongoose.model('Tour', tourSchema);
