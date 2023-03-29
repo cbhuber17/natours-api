@@ -5,6 +5,8 @@ const tourController = require('./../controllers/tourController');
 
 const router = express.Router();
 
+// Middleware types: document, query, aggregate and model
+
 // Alias route of popular queries
 // Alias via aliasTopTours as middleware
 router

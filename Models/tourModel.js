@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const tourSchema = new mongoose.Schema(
   {
@@ -7,6 +8,9 @@ const tourSchema = new mongoose.Schema(
       required: [true, 'A tour must have a name'],
       unique: true,
       trim: true,
+    },
+    slug: {
+      type: String,
     },
     duration: {
       type: Number,
@@ -59,6 +63,21 @@ const tourSchema = new mongoose.Schema(
     toJSON: { virtuals: true },
   }
 );
+
+// Document middleware, pre middleware, runs before .save() and .create() methods
+// But not .insertMany(), will not run this middleware
+// Will act on the data prior to it being saved in the DB
+// Called when there is a POST API request
+tourSchema.pre('save', function (next) {
+  // In the model schema, put the slug (safe URL string) as the name
+  this.slug = slugify(this.name, { lower: true });
+  next();
+});
+
+// Post middleware hook
+// tourSchema.post('save', function(doc, next) {
+//   next();
+// })
 
 // Virtual properties, not persistent in db
 // Cannot use in query
