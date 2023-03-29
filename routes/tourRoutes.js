@@ -13,6 +13,7 @@ router
 
 // Aggregation pipeline in MONGO route
 router.route('/tour-stats').get(tourController.getTourStats);
+router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
 
 // Root of router URL
 router
