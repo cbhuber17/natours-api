@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -27,7 +28,27 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please confirm your password'],
     minlength: 8,
+    validate: {
+      // Only works on SAVE! (User.save())
+      validator: function (el) {
+        return el === this.password;
+      },
+      message: 'Passwords are not the same',
+    },
   },
+});
+
+// Pre-middleware hook, manipulate password before it enters DB
+userSchema.pre('save', async function (next) {
+  // If the pw is not modified, continue to next middleware
+  if (!this.isModified('password')) return next;
+
+  // 12 (cost) is good for CPU intensity speed
+  this.password = await bcrypt.hash(this.password, 12);
+
+  // Not needed to store in DB
+  this.passwordConfirm = undefined;
+  next();
 });
 
 const User = mongoose.model('User', userSchema);
