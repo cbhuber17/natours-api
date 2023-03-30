@@ -70,13 +70,13 @@ exports.createTour = catchAsync(async (req, res, next) => {
 exports.updateTour = catchAsync(async (req, res, next) => {
   const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
     new: true, // New updated document is the one returned
+    runValidators: true,
   });
 
   if (!tour) {
     return next(new AppError('No tour found with that ID', 404));
   }
 
-  // ID checking done in middleware
   res.status(200).json({
     status: 'success',
     data: {
