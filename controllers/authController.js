@@ -95,7 +95,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // Check if user changed password after the JWT was issued
   // Instance method in usermodel.js
-  if (freshUser.changesPasswordAfter(decoded.iat))
+  if (freshUser.ChangedPasswordAfter(decoded.iat))
     return next(
       new AppError('User recently changed password!  Please log in again.', 401)
     );
