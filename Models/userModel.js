@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
+// ------------------------------------------------------------------
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -37,7 +39,10 @@ const userSchema = new mongoose.Schema({
       message: 'Passwords are not the same',
     },
   },
+  passwordChangedAt: Date,
 });
+
+// ------------------------------------------------------------------
 
 // Pre-middleware hook, manipulate password before it enters DB
 userSchema.pre('save', async function (next) {
@@ -52,6 +57,8 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+// ------------------------------------------------------------------
+
 // Instance method available in all documents in a mongo collection
 userSchema.methods.correctPassword = async function (
   candidatePassword,
@@ -59,6 +66,23 @@ userSchema.methods.correctPassword = async function (
 ) {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
+
+// ------------------------------------------------------------------
+
+// Instance method
+userSchema.methods.ChangedPasswordAfter = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    return JWTTimestamp < changedTimestamp;
+  }
+
+  return false;
+};
+
+// ------------------------------------------------------------------
 
 const User = mongoose.model('User', userSchema);
 

@@ -1,6 +1,6 @@
 const express = require('express');
 const tourController = require('./../controllers/tourController');
-
+const authController = require('./../controllers/authController');
 // ------------------------------------------------------------------
 
 const router = express.Router();
@@ -20,7 +20,7 @@ router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
 // Root of router URL
 router
   .route('/')
-  .get(tourController.getAllTours)
+  .get(authController.protect, tourController.getAllTours) // Check protected routes of auth users
   .post(tourController.createTour); // Middleware check body first, create tour next
 
 router
