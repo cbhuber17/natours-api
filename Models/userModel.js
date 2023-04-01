@@ -69,7 +69,7 @@ userSchema.pre('save', async function (next) {
 // Pre-middleware hook, update passwordChangedAt
 userSchema.pre('save', function (next) {
   // PW not modified or new document in mongo, move to next middleware
-  if (!this.isModified('password') || this.isNew()) return next();
+  if (!this.isModified('password') || this.isNew) return next();
 
   // Subtract 1 second
   // Changed token happened before changing password
