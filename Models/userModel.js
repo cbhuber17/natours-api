@@ -36,9 +36,8 @@ const userSchema = new mongoose.Schema({
   passwordConfirm: {
     type: String,
     required: [true, 'Please confirm your password'],
-    minlength: 8,
     validate: {
-      // Only works on SAVE! (User.save())
+      // Only works on CREATE and SAVE! (User.save())
       validator: function (el) {
         return el === this.password;
       },
@@ -55,13 +54,27 @@ const userSchema = new mongoose.Schema({
 // Pre-middleware hook, manipulate password before it enters DB
 userSchema.pre('save', async function (next) {
   // If the pw is not modified, continue to next middleware
-  if (!this.isModified('password')) return next;
+  if (!this.isModified('password')) return next();
 
   // 12 (cost) is good for CPU intensity speed
   this.password = await bcrypt.hash(this.password, 12);
 
   // Not needed to store in DB
   this.passwordConfirm = undefined;
+  next();
+});
+
+// ------------------------------------------------------------------
+
+// Pre-middleware hook, update passwordChangedAt
+userSchema.pre('save', function (next) {
+  // PW not modified or new document in mongo, move to next middleware
+  if (!this.isModified('password') || this.isNew()) return next();
+
+  // Subtract 1 second
+  // Changed token happened before changing password
+  // Ensure token has been created after password has been changed
+  this.passwordChangedAt = Date.now() - 1000;
   next();
 });
 
@@ -96,12 +109,13 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
 userSchema.methods.createPasswordResetToken = function () {
   const resetToken = crypto.randomBytes(32).toString('hex');
 
-  // Encrypted token in db
+  // Encrypted token in DB
   this.passwordResetToken = crypto
     .createHash('sha256')
     .update(resetToken)
     .digest('hex');
 
+  // 10 min expiry
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
 
   return resetToken;

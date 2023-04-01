@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const { promisify } = require('util');
 const User = require('./../Models/userModel');
 const catchAsync = require('./../utils/catchAsync');
@@ -54,7 +55,7 @@ exports.login = catchAsync(async (req, res, next) => {
   // correctPassword defined in userModel.js, instance method available on all mongo documents
   // If user doesn't exist, short circuit
   if (!user || !(await user.correctPassword(password, user.password))) {
-    return next(new AppError('Incorrect email or password'));
+    return next(new AppError('Incorrect email or password', 401));
   }
 
   // All good, send token to client
@@ -115,7 +116,7 @@ exports.restrictTo = (...roles) => {
     // Roles is an array
     if (!roles.includes(req.user.role)) {
       return next(
-        AppError('You do not have permission to perform this action.', 403)
+        new AppError('You do not have permission to perform this action.', 403)
       );
     }
     next();
@@ -171,5 +172,40 @@ exports.forgotPassword = async (req, res, next) => {
 
 // ------------------------------------------------------------------
 
-exports.resetPassword = (req, res, next) => {};
+exports.resetPassword = catchAsync(async (req, res, next) => {
+  // Get user based on the token
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex');
+
+  // Identify user by token
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: Date.now() },
+  });
+
+  // If token has not expired, and there is a user, set the new password
+  if (!user) {
+    return next(new AppError('Token is invalid or has expired', 400));
+  }
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+
+  // Use validators (not passing in validateBeforeSave)
+  await user.save();
+
+  //  Update changedPasswordAt property for the user
+
+  // Log the user in, sent JWT
+  const token = signToken(user._id);
+
+  res.status(200).json({
+    status: 'success',
+    token,
+  });
+});
+
 // ------------------------------------------------------------------
