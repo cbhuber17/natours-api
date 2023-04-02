@@ -6,8 +6,12 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const helmet = require('helmet');
 
 const app = express();
+
+// Set security HTTP headers
+app.use(helmet());
 
 // Global Middlewares
 if (process.env.NODE_ENV === 'development') {
@@ -23,13 +27,14 @@ const limiter = rateLimit({
 // Limit access to the API route
 app.use('/api', limiter);
 
-app.use(express.json()); // Middleware, allows post routes
-
+// Body parser, reading data from the body into req.body
+app.use(express.json({ limit: '10kb' })); // Middleware, allows post routes
 app.use(express.static(`${__dirname}/public`)); // Serve static content (HTML files)
 
 // ------------------------------------------------------------------
 
 // Middleware to get time
+// Testing
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
