@@ -1,10 +1,13 @@
 const express = require('express');
 const tourController = require('./../controllers/tourController');
 const authController = require('./../controllers/authController');
-const reviewController = require('./../controllers/reviewController');
+const reviewRouter = require('./reviewRoutes');
 // ------------------------------------------------------------------
 
 const router = express.Router();
+
+// Bring in the review router to post reviews from a tour
+router.use('/:tourId/reviews', reviewRouter);
 
 // Middleware types: document, query, aggregate and model
 
@@ -38,12 +41,13 @@ router
 // POST /tour/<tour_id>/reviews  // Reviews is a child of tour (POST)
 // GET /tour/<tour_id>/reviews   // Get reviews
 // GET /tour/<tour_id>/reviews/<review_id> // Get a specific review
-router
-  .route('/:tourId/reviews')
-  .post(
-    authController.protect,
-    authController.restrictTo('user'),
-    reviewController.createReview
-  );
+// Since it involves reviews, this code doesn't belong here in the tour router
+// router
+//   .route('/:tourId/reviews')
+//   .post(
+//     authController.protect,
+//     authController.restrictTo('user'),
+//     reviewController.createReview
+//   );
 
 module.exports = router;
