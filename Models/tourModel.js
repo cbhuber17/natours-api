@@ -115,6 +115,14 @@ const tourSchema = new mongoose.Schema(
         ref: 'User',
       },
     ],
+    // Child referencing, not to do as there could be thousands of reviews
+    // polluting the tour (parent) object
+    // reviews: [
+    //   {
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: 'Review',
+    //   },
+    // ],
   },
   {
     // Schema options
@@ -153,6 +161,15 @@ tourSchema.pre('save', function (next) {
 // Cannot use in query
 tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
+});
+
+// Instead of doing child referencing as commented out in the schema above
+// Capture the reviews as a virtual method, this is how to connect
+// tour and review models together (virtual populate)
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tour',
+  localField: '_id',
 });
 
 // Query middleware

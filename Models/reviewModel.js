@@ -44,10 +44,16 @@ const reviewSchema = new mongoose.Schema(
 // i.e. with the user details, name, email etc.
 // However it is not embedded, this is just a neat trick to use populate to get name, email, etc.
 reviewSchema.pre(/^find/, function (next) {
+  // Removed since this is too much information including the tour
+  //   this.populate({
+  //     path: 'tour',
+  //     select: 'name',
+  //   }).populate({
+  //     path: 'user',
+  //     select: 'name photo',
+  //   });
+
   this.populate({
-    path: 'tour',
-    select: 'name',
-  }).populate({
     path: 'user',
     select: 'name photo',
   });
