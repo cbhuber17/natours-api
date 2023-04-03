@@ -14,17 +14,6 @@ const filterObj = (obj, ...allowedFields) => {
 
 // ------------------------------------------------------------------
 // Handlers
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
-
-  res.status(200).json({
-    status: 'success',
-    results: users.length,
-    data: {
-      users,
-    },
-  });
-});
 
 // ------------------------------------------------------------------
 
@@ -59,6 +48,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
 // ------------------------------------------------------------------
 
+// Deactivate your account
 exports.deleteMe = catchAsync(async (req, res, next) => {
   await User.findByIdAndUpdate(req.user.id, { active: false });
 
@@ -70,28 +60,19 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 
 // ------------------------------------------------------------------
 
-exports.getUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined!',
-  });
-};
-
-// ------------------------------------------------------------------
-
 // This is done by /signup route
 exports.createUser = (req, res) => {
   res.status(500).json({
     status: 'error',
-    message: 'This route is not yet defined!',
+    message:
+      'This route is not yet defined!  Please use /signup route instead.',
   });
 };
 
 // ------------------------------------------------------------------
 
-// For admins only, should not update PW with this
+// For admins only, should not update PW with updateUser
 exports.updateUser = factory.updateOne(User);
-
-// ------------------------------------------------------------------
-
+exports.getUser = factory.getOne(User);
+exports.getAllUsers = factory.getAll(User);
 exports.deleteUser = factory.deleteOne(User);
