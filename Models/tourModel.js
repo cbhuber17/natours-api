@@ -118,6 +118,8 @@ const tourSchema = new mongoose.Schema(
   },
   {
     // Schema options
+    // Virtual properties, such as aggregating stats, we want them
+    // to show up whenever there is an output
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
