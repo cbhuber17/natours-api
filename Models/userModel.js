@@ -89,6 +89,7 @@ userSchema.pre('save', function (next) {
 // Don't leak inactive users
 userSchema.pre(/^find/, function (next) {
   this.find({ active: { $ne: false } }); // ne, not equal, mongo operation
+  next();
 });
 
 // ------------------------------------------------------------------
