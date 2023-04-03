@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 const validator = require('validator');
+const User = require('./userModel');
 
 const tourSchema = new mongoose.Schema(
   {
@@ -84,10 +85,41 @@ const tourSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    startLocation: {
+      // GeoJSON for geospatial data
+      type: {
+        type: String,
+        default: 'Point',
+        enum: ['Point'], // Only 1 option
+      },
+      coordinates: [Number], // Longitude first
+      address: String,
+      description: String,
+    },
+    locations: [
+      {
+        type: {
+          type: String,
+          default: 'Point',
+          enum: ['Point'],
+        },
+        coordinates: [Number],
+        address: String,
+        description: String,
+        day: Number,
+      },
+    ],
+    guides: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   {
     // Schema options
     toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 );
 
@@ -102,8 +134,30 @@ tourSchema.pre('save', function (next) {
   next();
 });
 
+// Save the complete user profile (from user DB) into the tour DB, as embedding
+// tourSchema.pre('save', async function (next) {
+//   // TODO: Currently this doesn't work, not sure why
+//   // "guides" in the Schema above was Array
+//   // Postman hangs when sending to "{{URL}}/api/v1/tours" that has a body of:
+//   //   {
+//   //     "name": "Test New Tour",
+//   //     "duration": 1,
+//   //     "maxGroupSize": 1,
+//   //     "difficulty": "easy",
+//   //     "price": 200,
+//   //     "summary": "Test tour",
+//   //     "imageCover": "tour-3-cover.jpg",
+//   //     "ratingsAverage": 4,
+//   //     "guides": ["6426f52e1ff8b3682c696a35","6428ccdd9667bb6bc0d74eb9"]
+//   // }
+//   const guidesPromises = this.guides.map((id) => User.findById(id));
+//   this.guides = await Promise.all(guidesPromises);
+//   next();
+// });
+
 // Post document middleware hook
 // tourSchema.post('save', function(doc, next) {
+// Will save document into DB
 //   next();
 // })
 
