@@ -37,11 +37,7 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 // ------------------------------------------------------------------
 
 exports.getTour = catchAsync(async (req, res, next) => {
-  // The "guides" field in the tour model schema expects an object ID
-  // This "populate" field will grab that object "guides" and populate as if its embedded in the DB
-  // However it is not embedded, this is just a neat trick to use populate
-  const tour = await Tour.findById({ _id: req.params.id }).populate('guides');
-  // const tour = await Tour.findById(req.params.id);
+  const tour = await Tour.findById(req.params.id);
 
   if (!tour) {
     return next(new AppError('No tour found with that ID', 404));

@@ -136,20 +136,6 @@ tourSchema.pre('save', function (next) {
 
 // Save the complete user profile (from user DB) into the tour DB, as embedding
 // tourSchema.pre('save', async function (next) {
-//   // TODO: Currently this doesn't work, not sure why
-//   // "guides" in the Schema above was Array
-//   // Postman hangs when sending to "{{URL}}/api/v1/tours" that has a body of:
-//   //   {
-//   //     "name": "Test New Tour",
-//   //     "duration": 1,
-//   //     "maxGroupSize": 1,
-//   //     "difficulty": "easy",
-//   //     "price": 200,
-//   //     "summary": "Test tour",
-//   //     "imageCover": "tour-3-cover.jpg",
-//   //     "ratingsAverage": 4,
-//   //     "guides": ["6426f52e1ff8b3682c696a35","6428ccdd9667bb6bc0d74eb9"]
-//   // }
 //   const guidesPromises = this.guides.map((id) => User.findById(id));
 //   this.guides = await Promise.all(guidesPromises);
 //   next();
@@ -173,6 +159,20 @@ tourSchema.pre(/^find/, function (next) {
   // this is a query object
   // Filter out secret tours
   this.find({ secretTour: { $ne: true } });
+  next();
+});
+
+// Query middleware
+// Regex to apply to methods that start with "find"
+// The "guides" field in the tour model schema expects an object ID
+// This "populate" field will grab that object "guides" ID and populate as if its embedded in the DB
+// i.e. with the tour guide details, name, email etc.
+// However it is not embedded, this is just a neat trick to use populate to get name, email, etc.
+tourSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt', // Do not display these fields in the API for the guides
+  });
   next();
 });
 
