@@ -37,6 +37,24 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
+// Query middleware
+// Regex to apply to methods that start with "find"
+// The "tour" and "user" fields in the tour model schema expects an object ID
+// This "populate" field will grab that object "tour" and "user" ID and populate as if its embedded in the DB
+// i.e. with the user details, name, email etc.
+// However it is not embedded, this is just a neat trick to use populate to get name, email, etc.
+reviewSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'tour',
+    select: 'name',
+  }).populate({
+    path: 'user',
+    select: 'name photo',
+  });
+
+  next();
+});
+
 const Review = mongoose.model('Review', reviewSchema);
 
 module.exports = Review;
