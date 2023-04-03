@@ -29,7 +29,7 @@ const createSendToken = (user, statusCode, res) => {
 
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true; // only on HTTPS
 
-  res.cookie('jwt', token);
+  res.cookie('jwt', token, cookieOptions);
 
   // Remove PW from output
   user.password = undefined;
