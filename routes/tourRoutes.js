@@ -19,18 +19,32 @@ router
 
 // Aggregation pipeline in MONGO route
 router.route('/tour-stats').get(tourController.getTourStats);
-router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
+router
+  .route('/monthly-plan/:year')
+  .get(
+    authController.protect,
+    authController.restrictTo('admin', 'lead-guide', 'guide'),
+    tourController.getMonthlyPlan
+  );
 
 // Root of router URL
 router
   .route('/')
-  .get(authController.protect, tourController.getAllTours) // Check protected routes of auth users
-  .post(tourController.createTour); // Middleware check body first, create tour next
+  .get(tourController.getAllTours) // Allow anyone to get all tours
+  .post(
+    authController.protect,
+    authController.restrictTo('admin', 'lead-guide'),
+    tourController.createTour
+  ); // Middleware check body first, create tour next
 
 router
   .route('/:id')
   .get(tourController.getTour)
-  .patch(tourController.updateTour)
+  .patch(
+    authController.protect,
+    authController.restrictTo('admin', 'lead-guide'),
+    tourController.updateTour
+  )
   .delete(
     authController.protect,
     authController.restrictTo('admin', 'lead-guide'),
