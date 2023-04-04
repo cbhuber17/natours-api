@@ -81,18 +81,44 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
   ]);
 
   // Persist this change into the DB
-  await Tour.findByIdAndUpdate(tourId, {
-    ratingsQuantity: stats[0].nRating,
-    ratingsAverage: stats[0].avgRating,
-  });
+  if (stats.length > 0) {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: stats[0].nRating,
+      ratingsAverage: stats[0].avgRating,
+    });
+  } else {
+    // Set to default values
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: 0,
+      ratingsAverage: 4.5,
+    });
+  }
 };
 
 // Middleware to save the averages
 // Call the constructor of tour to allow access to the static function in this middleware
 // Use post (as in later, not HTTP method), instead of pre to ensure all docs are in the DB
 // when executing this middleware.  .post does not use next().
+// Queries are not available in .post().  Queries are available in .pre().
 reviewSchema.post('save', function () {
   this.constructor.calcAverageRatings(this.tour);
+});
+
+// Look for findByIdAndUpdate, findByIdAndDelete
+// Update the ratings average when a review is added or deleted
+// Here just stores temporary info for the post() method to access
+reviewSchema.pre(/^findOneAnd/, async function (next) {
+  // Save results to access in post middleware
+  this.r = await this.findOne();
+  next();
+});
+
+// Use post (as in later, not HTTP method), instead of pre to ensure all docs are in the DB
+// when executing this middleware.  .post does not use next().
+// When a review is added or deleted, update the ratings
+// Queries are not available here
+reviewSchema.post(/^findOneAnd/, async function () {
+  await this.r.constructor.calcAverageRatings(this.r.tour);
 });
 
 const Review = mongoose.model('Review', reviewSchema);
