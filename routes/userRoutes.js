@@ -23,7 +23,7 @@ router.delete('/deleteMe', userController.deleteMe);
 
 // Router middleware
 // Roles below this line are restricted to admin only
-app.use(authController.restrictTo('admin'));
+router.use(authController.restrictTo('admin'));
 
 // Root of router URL
 router
