@@ -167,6 +167,9 @@ tourSchema.index({ price: 1, ratingsAverage: -1 });
 // Slug will become most queried field
 tourSchema.index({ slug: 1 });
 
+// Tell mongo that startLocation is based on 2dsphere datum
+tourSchema.index({ startLocation: '2dsphere' });
+
 // Virtual properties, not persistent in db
 // Cannot use in query
 tourSchema.virtual('durationWeeks').get(function () {
