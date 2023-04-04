@@ -57,6 +57,7 @@ const userSchema = new mongoose.Schema({
 // ------------------------------------------------------------------
 
 // Pre-middleware hook, manipulate password before it enters DB
+// Comment out when importing users from file
 userSchema.pre('save', async function (next) {
   // If the pw is not modified, continue to next middleware
   if (!this.isModified('password')) return next();
@@ -72,6 +73,7 @@ userSchema.pre('save', async function (next) {
 // ------------------------------------------------------------------
 
 // Pre-middleware hook, update passwordChangedAt
+// Comment out when importing users from file
 userSchema.pre('save', function (next) {
   // PW not modified or new document in mongo, move to next middleware
   if (!this.isModified('password') || this.isNew) return next();
