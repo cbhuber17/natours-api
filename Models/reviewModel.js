@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Tour = require('./tourModel');
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -59,6 +60,39 @@ reviewSchema.pre(/^find/, function (next) {
   });
 
   next();
+});
+
+// Calculate the average ratings using MONGO operations
+// Use a static method which is bound to the class, not the instance
+// Calculating average doesn't make sense to do on instance methods
+reviewSchema.statics.calcAverageRatings = async function (tourId) {
+  const stats = await this.aggregate([
+    {
+      $match: { tour: tourId },
+    },
+    {
+      // Group tours together by tour
+      $group: {
+        _id: '$tour',
+        nRating: { $sum: 1 }, // Mongo operator to add 1 for each tour
+        avgRating: { $avg: '$rating' },
+      },
+    },
+  ]);
+
+  // Persist this change into the DB
+  await Tour.findByIdAndUpdate(tourId, {
+    ratingsQuantity: stats[0].nRating,
+    ratingsAverage: stats[0].avgRating,
+  });
+};
+
+// Middleware to save the averages
+// Call the constructor of tour to allow access to the static function in this middleware
+// Use post (as in later, not HTTP method), instead of pre to ensure all docs are in the DB
+// when executing this middleware.  .post does not use next().
+reviewSchema.post('save', function () {
+  this.constructor.calcAverageRatings(this.tour);
 });
 
 const Review = mongoose.model('Review', reviewSchema);
