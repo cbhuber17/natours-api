@@ -38,6 +38,10 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
+// Combination of users and tours must be unique.
+// This prevents the same user from writing multiple reviews on the same tour
+reviewSchema.index({ tour: 1, user: 1 }, { unique: true });
+
 // Query middleware
 // Regex to apply to methods that start with "find"
 // The "tour" and "user" fields in the tour model schema expects an object ID
