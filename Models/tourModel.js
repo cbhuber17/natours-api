@@ -157,6 +157,15 @@ tourSchema.pre('save', function (next) {
 //   next();
 // })
 
+// Index the price in ascending order and the ratings avg in descending order
+// Indexing allows DBs to search faster for better performance
+// Multiple parameters is a compound index
+// Study access patters on the DB to determine which ones to index
+tourSchema.index({ price: 1, ratingsAverage: -1 });
+
+// Slug will become most queried field
+tourSchema.index({ slug: 1 });
+
 // Virtual properties, not persistent in db
 // Cannot use in query
 tourSchema.virtual('durationWeeks').get(function () {
