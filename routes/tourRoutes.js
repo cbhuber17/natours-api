@@ -27,9 +27,13 @@ router
     tourController.getMonthlyPlan
   );
 
+// Get tours within a radius of a center point
 router
   .route('/tours-within/:distance/center/:latlng/unit/:unit')
   .get(tourController.getToursWithin);
+
+//
+router.route('/distances/:latlng/unit/:unit').get(tourController.getDistances);
 
 // Root of router URL
 router

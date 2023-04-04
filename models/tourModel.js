@@ -214,13 +214,15 @@ tourSchema.pre(/^find/, function (next) {
 // });
 
 // Aggregation middleware
-tourSchema.pre('aggregate', function (next) {
-  // this points to the current aggregation object
-  // Filter out secret tours as part of the aggregation computations
-  // Pipeline is an array, unshift adds to beginning of array
-  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
-  next();
-});
+// Commented out because tourController .getDistance() has $geoNear, and this needs to be run first
+// in a pipeline
+// tourSchema.pre('aggregate', function (next) {
+//   // this points to the current aggregation object
+//   // Filter out secret tours as part of the aggregation computations
+//   // Pipeline is an array, unshift adds to beginning of array
+//   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+//   next();
+// });
 
 const Tour = mongoose.model('Tour', tourSchema);
 
