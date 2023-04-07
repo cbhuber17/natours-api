@@ -8,6 +8,7 @@ const globalErrorHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
+const viewRouter = require('./routes/viewRoutes');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
@@ -15,15 +16,16 @@ const hpp = require('hpp');
 
 const app = express();
 
+// Set security HTTP headers
+app.use(helmet());
+// app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
+
 // Use pug templates to render front end
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
 // Serve static content (HTML files)
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Set security HTTP headers
-app.use(helmet());
 
 // Global Middlewares
 if (process.env.NODE_ENV === 'development') {
@@ -72,10 +74,22 @@ app.use((req, res, next) => {
 
 // ------------------------------------------------------------------
 // Route mounting
-app.get('/', (req, res) => {
-  res.status(200).render('base');
-});
+// app.get('/', (req, res) => {
+//   res.status(200).render('base');
+// });
 
+// app.get('/overview', (req, res) => {
+//   res.status(200).render('overview', {
+//     title: 'All Tours',
+//   });
+// });
+
+// app.get('/tour', (req, res) => {
+//   res.status(200).render('overview', {
+//     title: 'TBD',
+//   });
+// });
+app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
