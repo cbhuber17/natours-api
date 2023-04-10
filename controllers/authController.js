@@ -85,15 +85,26 @@ exports.login = catchAsync(async (req, res, next) => {
 
 // ------------------------------------------------------------------
 
+exports.logout = (req, res) => {
+  res.clearCookie('jwt');
+  res.status(200).json({ status: 'success' });
+};
+
+// ------------------------------------------------------------------
+
 // Protected routes for authenticated users
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
   // Getting the token and check if it exists
+  // Get JWT from authorization header
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
+    // Otherwise get it from the browser cookie
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
 
   if (!token) {
@@ -124,6 +135,43 @@ exports.protect = catchAsync(async (req, res, next) => {
   req.user = freshUser;
   next();
 });
+
+// ------------------------------------------------------------------
+
+// Only for rendered pages, no errors!
+// Don't use catchAsync as it will throw an error if an invalid JWT is present
+// Invalid JWT happens when the user logs out
+exports.isLoggedIn = async (req, res, next) => {
+  // JWT always comes from cookie here, not header
+  if (req.cookies.jwt) {
+    try {
+      // 1) verify token
+      const decoded = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECRET
+      );
+
+      // 2) Check if user still exists
+      const currentUser = await User.findById(decoded.id);
+      if (!currentUser) {
+        return next();
+      }
+
+      // 3) Check if user changed password after the token was issued
+      if (currentUser.changedPasswordAfter(decoded.iat)) {
+        return next();
+      }
+
+      // Reached this point - THERE IS A LOGGED IN USER
+      // Locals (in the response) allows the pug views templates access to this variable
+      res.locals.user = currentUser;
+      return next();
+    } catch (err) {
+      return next(); // No logged in user
+    }
+  }
+  next();
+};
 
 // ------------------------------------------------------------------
 
