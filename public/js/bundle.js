@@ -12125,7 +12125,7 @@ var updateSettings = /*#__PURE__*/function () {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           _context.prev = 0;
-          url = type === 'password' ? 'http://127.0.0.1:3000/api/v1/users/updateMyPassword' : 'http://127.0.0.1:3000/api/v1/users/updateMe';
+          url = type === 'password' ? 'http://127.0.0.1:8000/api/v1/users/updateMyPassword' : 'http://127.0.0.1:8000/api/v1/users/updateMe';
           _context.next = 4;
           return (0, _axios.default)({
             method: 'PATCH',
@@ -12341,6 +12341,8 @@ if (userPasswordForm) userPasswordForm.addEventListener('submit', /*#__PURE__*/f
           }, 'password');
         case 7:
           document.querySelector('.btn--save-password').textContent = 'Save password';
+
+          // Clear password fields
           document.getElementById('password-current').value = '';
           document.getElementById('password').value = '';
           document.getElementById('password-confirm').value = '';

@@ -44,6 +44,9 @@ app.use('/api', limiter);
 
 // Body parser, reading data from the body into req.body
 app.use(express.json({ limit: '10kb' })); // Middleware, allows post routes
+
+// Middleware to allow to parse data coming from a form (in user account route /me)
+app.use(express.urlencoded({ extended: true, limit: '10kb' })); // Allows to pass more complex data, max 10k
 app.use(cookieParser());
 
 // Data sanitization against NoSQL query injection, XSS

@@ -5,6 +5,8 @@ const authController = require('../controllers/authController');
 const router = express.Router();
 
 // Apply to all routes
+// Only required for certain routes, queries the DB in isLoggedin, as well as protect,
+// no need to do it twice.
 // router.use(authController.isLoggedIn);
 
 router.get('/', authController.isLoggedIn, viewsController.getOverview);

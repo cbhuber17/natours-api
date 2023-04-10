@@ -49,6 +49,8 @@ if (userPasswordForm)
     );
 
     document.querySelector('.btn--save-password').textContent = 'Save password';
+
+    // Clear password fields
     document.getElementById('password-current').value = '';
     document.getElementById('password').value = '';
     document.getElementById('password-confirm').value = '';
