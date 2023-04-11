@@ -2,6 +2,39 @@ const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
+const multer = require('multer');
+
+// ------------------------------------------------------------------
+
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/img/users');
+  },
+  filename: (req, file, cb) => {
+    // user-uniqueid-timestamp
+    // Set the properties of the file
+    const ext = file.mimetype.split('.')[1];
+    cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
+  },
+});
+
+// Filter to detect images
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb(new AppError('Not an image!  Please upload only images', 400), false);
+  }
+};
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+exports.uploadUserPhoto = upload.single('photo');
+
+// ------------------------------------------------------------------
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -38,6 +71,9 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   // Only allow changes to name and role
   // req.body contains everything, should not allow someone to change e.g. role to admin
   const filteredBody = filterObj(req.body, 'name', 'email');
+
+  // Location of the file
+  if (req.file) filteredBody.photo = req.file.filename;
 
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true, // Return new object
