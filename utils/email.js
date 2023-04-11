@@ -12,12 +12,14 @@ module.exports = class Email {
 
   newTransport() {
     if (process.env.NODE_ENV === 'production') {
-      // Sendgrid
+      //SendinBlue
       return nodemailer.createTransport({
-        service: 'SendGrid',
+        service: 'SendinBlue', // either provide service name OR host, port info
+        // host: process.env.SENDINBLUE_HOST,
+        // port: process.env.SENDINBLUE_PORT,
         auth: {
-          user: process.env.SENDGRID_USERNAME,
-          pass: process.env.SENDGRID_PASSWORD,
+          user: process.env.SENDINBLUE_USERNAME,
+          pass: process.env.SENDINBLUE_PASSWORD,
         },
       });
     }
