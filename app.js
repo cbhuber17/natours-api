@@ -9,6 +9,8 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
+const bookingController = require('./controllers/bookingController');
+
 const viewRouter = require('./routes/viewRoutes');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -43,6 +45,13 @@ const limiter = rateLimit({
 
 // Limit access to the API route
 app.use('/api', limiter);
+
+// Body coming from stripe is not JSON
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  bookingController.webhookCheckout
+);
 
 // Body parser, reading data from the body into req.body
 app.use(express.json({ limit: '10kb' })); // Middleware, allows post routes
