@@ -8,7 +8,7 @@ Additional TODO/Known Issues:
 
 - Implement a restriction that users can only add a review to tours they booked
 - On the profile page, add "My Reviews" and "Billing" page
-- Create a sign in front end page that will utilize the sign-in API
+- Create a sign up front end page that will utilize the sign-up API
 - Document all APIs in Postman
 - Create a form front end page that allows reviews to be added on a specific tour page
 - Logging out does so successfully but results in an error, investigate this
