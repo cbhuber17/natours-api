@@ -7,6 +7,7 @@ https://natours-ewub.onrender.com/
 Additional TODO/Known Issues:
 
 - Implement a restriction that users can only add a review to tours they booked
+- On the profile page, add "My Reviews" and "Billing" page
 - Create a sign in front end page that will utilize the sign-in API
 - Document all APIs in Postman
 - Create a form front end page that allows reviews to be added on a specific tour page
