@@ -50,7 +50,13 @@ body {
 
 .main {
   background-color: #f7f7f7;
-  padding: 8rem 6rem;
+
+  @media (min-width: $bp-large) {
+    padding: 8rem 6rem;
+  }
+  @media (max-width: $bp-large) {
+    padding: 2rem;
+  }
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -851,7 +857,12 @@ body {
 
 .footer {
   background-color: #f7f7f7;
-  padding: 6rem 4rem 3rem 4rem;
+  @media (min-width: $bp-small) {
+    padding: 6rem 4rem 3rem 4rem;
+  }
+  @media (max-width: $bp-smallest) {
+    padding: 1rem;
+  }
   font-size: 1.4rem;
   display: grid;
   grid-template-columns: auto auto;
@@ -877,7 +888,13 @@ body {
     display: flex;
 
     li {
-      margin-left: 1.5rem;
+      @media (min-width: $bp-small) {
+        margin-left: 1.5rem;
+      }
+      @media (max-width: $bp-small) {
+        margin-left: 0.5rem;
+        text-align: center;
+      }
     }
 
     a {
@@ -1333,12 +1350,19 @@ body {
 }
 
 .login-form {
+  @media (min-width: $bp-large) {
+    padding: 5rem 7rem;
+  }
+  @media (max-width: $bp-small) {
+    padding: 2rem;
+  }
+  padding: 5rem 7rem;
   margin: 0 auto;
   max-width: 55rem;
   background-color: #fff;
   -webkit-box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.06);
   box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.06);
-  padding: 5rem 7rem;
+
   border-radius: 5px;
 }
 
