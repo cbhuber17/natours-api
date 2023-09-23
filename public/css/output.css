@@ -278,8 +278,6 @@ body {
 
 .header {
   background-color: #444;
-  padding: 0 5rem;
-  height: 8rem;
   position: relative;
   z-index: 100;
   display: -webkit-box;
@@ -291,6 +289,17 @@ body {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+}
+@media (min-width: 980px) {
+  .header {
+    height: 8rem;
+    padding: 0 5rem;
+  }
+}
+@media (max-width: 980px) {
+  .header {
+    padding: 1rem 5rem;
+  }
 }
 
 @media only screen and (max-width: 62.5em) {
@@ -989,8 +998,22 @@ body {
   max-width: 120rem;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   grid-gap: 7rem;
+}
+@media (min-width: 1250px) {
+  .card-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 1250px) and (min-width: 980px) {
+  .card-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 980px) and (min-width: 600px) {
+  .card-container {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
 
 .card {
