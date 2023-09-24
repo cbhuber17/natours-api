@@ -540,13 +540,23 @@ body {
 }
 .overview-box__detail {
   font-size: 1.5rem;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
   font-weight: 400;
+}
+@media (min-width: 500px) {
+  .overview-box__detail {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+}
+@media (max-width: 500px) {
+  .overview-box__detail {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
 }
 .overview-box__detail svg {
   margin-right: 1.25rem;

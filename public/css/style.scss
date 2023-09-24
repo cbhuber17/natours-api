@@ -555,12 +555,18 @@ body {
 
   &__detail {
     font-size: 1.5rem;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
+    @media (min-width: $bp-smallest) {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+    }
+    @media (max-width: $bp-smallest) {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
     font-weight: 400;
 
     svg {
