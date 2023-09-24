@@ -13,6 +13,7 @@ Additional TODO/Known Issues:
 - Create a form front end page that allows reviews to be added on a specific tour page
 - Logging out does so successfully but results in an error, investigate this
 - The checkout page does not retrieve the tour cover photo, this is most likely due to the very slow server of the free tier onredner.com
+- On the specific-tour page, make the "next date" more realistic
 
 # Dev Environment
 
