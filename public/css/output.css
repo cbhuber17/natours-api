@@ -221,6 +221,7 @@ body {
   text-transform: uppercase;
   display: inline-block;
   text-decoration: none;
+  text-align: center;
   position: relative;
   -webkit-transition: all 0.4s;
   transition: all 0.4s;
@@ -243,6 +244,13 @@ body {
   .btn:link,
   .btn:visited {
     padding: 2rem 6rem;
+  }
+}
+@media (max-width: 980px) {
+  .btn,
+  .btn:link,
+  .btn:visited {
+    margin-left: 2rem;
   }
 }
 
