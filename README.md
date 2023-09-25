@@ -16,6 +16,7 @@ Additional TODO/Known Issues:
 - On the specific-tour page, make the "next date" more realistic
 - Yellowknife (one spot) tour zooms in too close on page render
 - Add the user-side-nav-menu to the "my bookings page."
+- Logging out on the profile page seems to get hung
 
 # Dev Environment
 
