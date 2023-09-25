@@ -14,6 +14,7 @@ Additional TODO/Known Issues:
 - Logging out does so successfully but results in an error, investigate this
 - The checkout page does not retrieve the tour cover photo, this is most likely due to the very slow server of the free tier onredner.com
 - On the specific-tour page, make the "next date" more realistic
+- Yellowknife (one spot) tour zooms in too close on page render
 
 # Dev Environment
 
