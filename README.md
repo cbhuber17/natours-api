@@ -15,6 +15,7 @@ Additional TODO/Known Issues:
 - The checkout page does not retrieve the tour cover photo, this is most likely due to the very slow server of the free tier onredner.com
 - On the specific-tour page, make the "next date" more realistic
 - Yellowknife (one spot) tour zooms in too close on page render
+- Add the user-side-nav-menu to the "my bookings page."
 
 # Dev Environment
 
