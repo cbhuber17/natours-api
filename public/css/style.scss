@@ -236,7 +236,7 @@ body {
     padding: 2rem 6rem;
   }
   @media (max-width: $bp-medium) {
-    margin-left: 2rem;
+    margin-left: 1rem;
   }
   border-radius: 10rem;
   text-transform: uppercase;
@@ -920,9 +920,12 @@ body {
   overflow: hidden;
   -webkit-box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.07);
   box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.07);
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+
+  @media (min-width: $bp-medium) {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+  }
 
   &__menu {
     -webkit-box-flex: 32rem;
@@ -1212,11 +1215,16 @@ body {
     border-left: 0 solid #fff;
     -webkit-transition: all 0.3s;
     transition: all 0.3s;
+    text-align: center;
   }
 
   &--active,
   li:hover {
     border-left: 4px solid #fff !important;
+    @media (max-width: $bp-medium) {
+      border: 1px solid #fff;
+      padding: 1rem;
+    }
   }
 
   &--active a {
@@ -1227,12 +1235,14 @@ body {
   a:link,
   a:visited {
     padding: 1rem 4rem;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
+    @media (min-width: $bp-medium) {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+    }
     color: #fff;
     font-size: 1.5rem;
     text-transform: uppercase;
