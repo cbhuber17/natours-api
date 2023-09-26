@@ -7,11 +7,16 @@ https://natours-ewub.onrender.com/
 Additional TODO/Known Issues:
 
 - Implement a restriction that users can only add a review to tours they booked
-- Create a sign in front end page that will utilize the sign-in API
+- On the profile page, add "My Reviews" and "Billing" page
+- Create a sign up front end page that will utilize the sign-up API
 - Document all APIs in Postman
 - Create a form front end page that allows reviews to be added on a specific tour page
 - Logging out does so successfully but results in an error, investigate this
 - The checkout page does not retrieve the tour cover photo, this is most likely due to the very slow server of the free tier onredner.com
+- On the specific-tour page, make the "next date" more realistic
+- Yellowknife (one spot) tour zooms in too close on page render
+- Add the user-side-nav-menu to the "my bookings page."
+- Logging out on the profile page seems to get hung
 
 # Dev Environment
 
