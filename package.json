@@ -8,7 +8,7 @@
     "dev": "nodemon server.js",
     "start:prod": "set NODE_ENV=production&& nodemon server.js",
     "debug": "ndb server.js",
-    "sass": "sass --watch public/css/style.scss public/css/output.css",
+    "sass": "sass --watch public/css/main.scss public/css/style.css",
     "watch:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js --public-url ./",
     "build:js": "parcel build ./public/js/index.js --out-dir ./public/js --out-file bundle.js --public-url ./"
   },
