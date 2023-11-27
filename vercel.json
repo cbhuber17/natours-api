@@ -2,12 +2,12 @@
     "version": 2,
     "name": "natours-api",
     "builds": [
-        { "src": "public/js/index.js", "use": "@vercel/node" }
+        { "src": "public/js/bundle.js", "use": "@vercel/node" }
      ],
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "public/js/index.js"
+        "dest": "public/js/bundle.js"
       }
     ]
   }
